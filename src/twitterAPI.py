@@ -36,12 +36,15 @@ def lambda_handler(event, context):
                 f"What {synonym1} is shown in this image?", f"Try to name this {synonym1}."]
     
     text = random.choice(messages)
-    if tweet['description'][0] in ['a','e','i','o','u']:
-        text += " Hint: Its an " + tweet['description']+'.'
-    else:
-        text += " Hint: Its a " + tweet['description']+'.'
+    if len(tweet['description']) > 0:
+        if tweet['description'][0].isupper() or (' ' in tweet['description'] and tweet['description'].split(' ')[0].endswith('est')):
+            text += " Hint: Its the " + tweet['description']+'.'
+        elif tweet['description'][0] in ['a','e','i','o','u']:
+            text += " Hint: Its an " + tweet['description']+'.'
+        else:
+            text += " Hint: Its a " + tweet['description']+'.'
     
-    post_result = api.update_status(status=text, media_ids=[media.media_id])
+    post_result = api.update_status(status=text, media_ids=[media.media_id], long=tweet['coordinates'][0], lat=tweet['coordinates'][1])
     os.remove('temp.jpg')
 
     with open('tweets.json', 'a') as file:
