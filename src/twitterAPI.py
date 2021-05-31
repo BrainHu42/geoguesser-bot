@@ -3,6 +3,7 @@ import requests
 import json
 import itertools
 import tweepy
+import random
 
 from pathlib import Path
 from src.mapsAPI import get_place
@@ -28,7 +29,18 @@ def lambda_handler(event, context):
             tweet = get_place()
 
     media = api.media_upload(filename="temp.jpg")
-    text = "Try to guess the name of this location"
+    synonym1 = random.choice(['location', 'place'])
+    synonym2 = random.choice(['image','photograph', 'photo', 'picture'])
+    messages = [f"Try to guess the name of this {synonym1}.", f"Where was this {synonym2} taken?", 
+                f"What {synonym1} is this {synonym2} depicting?", f"What is the name of this {synonym1}?", 
+                f"What {synonym1} is shown in this image?", f"Try to name this {synonym1}."]
+    
+    text = random.choice(messages)
+    if tweet['description'][0] in ['a','e','i','o','u']:
+        text += " Hint: Its an " + tweet['description']+'.'
+    else:
+        text += " Hint: Its a " + tweet['description']+'.'
+    
     post_result = api.update_status(status=text, media_ids=[media.media_id])
     os.remove('temp.jpg')
 

@@ -6,7 +6,7 @@ client = Client()
 
 def get_data(ID, tweet):
     entity = client.get(ID, load=True)
-    description = entity.description.__repr__()[2:][:-1]
+    description = str(entity.description.__repr__())[2:-1]
     image_prop = client.get('P18')
     image = entity[image_prop]
     response = requests.get(image.image_url, stream=True)
