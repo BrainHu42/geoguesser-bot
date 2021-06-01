@@ -36,7 +36,6 @@ def get_place():
             if status == 200:
                 tweet['name'] = props['name']
                 tweet['coordinates'] = place['geometry']['coordinates']
-                tweet['types'] = props['kinds']
                 return tweet
 
     return get_place()

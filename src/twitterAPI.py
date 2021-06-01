@@ -7,6 +7,7 @@ import random
 
 from pathlib import Path
 from src.mapsAPI import get_place
+from src.instaAPI import cross_post
 
 ROOT = Path(__file__).resolve().parents[0]
 
@@ -21,7 +22,7 @@ def lambda_handler(event, context):
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
 
-    with open('tweets.json') as file:
+    with open(ROOT / 'tweets.json') as file:
         history = [json.loads(line)['name'] for line in itertools.islice(file,0,200)]
         tweet = get_place()
         while tweet['name'] in history:
@@ -37,17 +38,21 @@ def lambda_handler(event, context):
     
     text = random.choice(messages)
     if len(tweet['description']) > 0:
-        if tweet['description'][0].isupper() or (' ' in tweet['description'] and tweet['description'].split(' ')[0].endswith('est')):
+        if ' ' in tweet['description'] and tweet['description'].split(' ')[0].endswith('est'):
             text += " Hint: Its the " + tweet['description']+'.'
         elif tweet['description'][0] in ['a','e','i','o','u']:
             text += " Hint: Its an " + tweet['description']+'.'
         else:
             text += " Hint: Its a " + tweet['description']+'.'
+    tweet['text'] = text
+
+    cross_post(tweet)
     
     post_result = api.update_status(status=text, media_ids=[media.media_id], long=tweet['coordinates'][0], lat=tweet['coordinates'][1])
     os.remove('temp.jpg')
+    print('--------Posted to Twitter--------')
 
-    with open('tweets.json', 'a') as file:
+    with open(ROOT / 'tweets.json', 'a') as file:
         json.dump(tweet, file)
         file.write(os.linesep)
 

@@ -2,7 +2,7 @@ import os
 import dotenv
 import requests
 import pprint
-from random import randint
+from PIL import Image
 
 #Development
 dotenv.load_dotenv()
@@ -26,4 +26,10 @@ def get_place():
     places = response.json()['features']
     pprint.pprint(places)
 
-get_place()
+
+img = Image.open('highres.jpg')
+scale_factor = 4000000.0 / 5481727
+# dimensions = (int(x * scale_factor) for x in img.size)
+# img.resize(dimensions,Image.ANTIALIAS)
+# img.save("temp.jpg",quality=95)
+img.save('temp.jpg',optimize=True,quality=int(100*scale_factor)) 

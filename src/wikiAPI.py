@@ -17,7 +17,7 @@ def get_data(ID, tweet):
             c.encode(encoding='utf-8').decode('ascii')
         except UnicodeDecodeError:
             count += 1
-        if count > 2:
+        if count > 1:
             return 400
 
     image_prop = client.get('P18')
@@ -33,9 +33,7 @@ def get_data(ID, tweet):
 
         if image.image_size > 4500000:
             img = Image.open('temp.jpg')
-            scale_factor = 4500000.0 / image.image_size
-            dimensions = (int(x * scale_factor) for x in image.image_resolution)
-            img.resize(dimensions,Image.ANTIALIAS)
-            img.save("temp.jpg",quality=95)
+            scale_factor = 3600000.0 / image.image_size
+            img.save('temp.jpg',optimize=True,quality=int(100*scale_factor)) 
 
     return response.status_code
