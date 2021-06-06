@@ -1,35 +1,62 @@
 import os
+import tweepy
 import dotenv
-import requests
+import json
+import collections
 import pprint
-from PIL import Image
-
-#Development
 dotenv.load_dotenv()
+from wikidata.client import Client
 
-# ROOT = Path(__file__).resolve().parents[0]
+client = Client()
 
-def get_place():
-    API_KEY = os.getenv("API_KEY")
-    longitude = -74
-    latitude = 40
-
-    parameters = {
-        "radius": "1000000",
-        "lat": latitude,
-        "lon": longitude,
-        "rate": "3h",
-        "limit": "10",
-        "apikey": API_KEY,
-    }
-    response = requests.get("https://api.opentripmap.com/0.1/en/places/radius", params=parameters)
-    places = response.json()['features']
-    pprint.pprint(places)
+entity = client.get('Q932794',load=True)
+print(entity.data['sitelinks']['enwiki']['url'])
+print(entity.sitelinks)
 
 
-img = Image.open('highres.jpg')
-scale_factor = 4000000.0 / 5481727
-# dimensions = (int(x * scale_factor) for x in img.size)
-# img.resize(dimensions,Image.ANTIALIAS)
-# img.save("temp.jpg",quality=95)
-img.save('temp.jpg',optimize=True,quality=int(100*scale_factor)) 
+# consumer_key = os.getenv("CONSUMER_KEY")
+# consumer_secret = os.getenv("CONSUMER_SECRET")
+# access_token = os.getenv("ACCESS_TOKEN")
+# access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+
+# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+# auth.set_access_token(access_token, access_token_secret)
+# api = tweepy.API(auth)
+# name = 'name_this_place'
+# for tweet in tweepy.Cursor(api.search,q='to:'+name, result_type='recent', timeout=99999).items(1000):
+#     print(tweet.text)
+
+# timeline = api.user_timeline(count=30, screen_name='name_this_place')
+
+# with open('src/tweets.json') as file:
+    # history = [json.loads(line) for line in file]
+
+# new = []
+
+# for entry in history:
+#     for tweet in timeline:
+#         text = tweet.text[:-24]
+#         tweet_id = tweet.id_str
+#         coords = tweet.coordinates['coordinates']
+#         if str(entry['coordinates'][0]) == str(coords[0]) and str(entry['coordinates'][1]) == str(coords[1]):
+#             entry['text'] = text
+#             entry['tweet_id'] = tweet_id
+#     # print("Tweet ID: "+tweet_id)
+#     # print(text)
+#     # print(coords)
+#     # print()
+
+# for entry in history:
+#     temp = {}
+#     coords = entry['coordinates']
+#     temp['coordinates'] = coords
+#     for key in entry:
+#         if not key == 'coordinates':
+#             temp[key] = entry[key]
+#     new.append(temp)
+
+# # print(new)
+# with open('new.jsonl', 'a') as f:
+#     for tweet in new:
+#         json.dump(tweet, f)
+#         f.write(os.linesep)

@@ -1,5 +1,5 @@
 import dotenv
-from src.twitterAPI import lambda_handler
+from src.lambda_function import lambda_handler
 
 dotenv.load_dotenv()
 if __name__ == "__main__":

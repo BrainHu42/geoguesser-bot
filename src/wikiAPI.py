@@ -17,7 +17,7 @@ def get_data(ID, tweet):
             c.encode(encoding='utf-8').decode('ascii')
         except UnicodeDecodeError:
             count += 1
-        if count > 1:
+        if count > 0:
             return 400
 
     image_prop = client.get('P18')
@@ -26,6 +26,9 @@ def get_data(ID, tweet):
     if response.status_code == 200:
         tweet['image_url'] = image.image_url
         tweet['description'] = description
+        if 'sitelinks' in entity.data and 'enwiki' in entity.data['sitelinks']:
+            tweet['wikipedia'] = entity.data['sitelinks']['enwiki']['url']
+            print(entity.data['sitelinks'])
             
         with open('temp.jpg', 'wb') as f:
             for chunk in response:
