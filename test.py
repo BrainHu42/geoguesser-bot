@@ -7,31 +7,31 @@ import pprint
 dotenv.load_dotenv()
 from wikidata.client import Client
 
-client = Client()
+# client = Client()
 
-entity = client.get('Q932794',load=True)
-print(entity.data['sitelinks']['enwiki']['url'])
-print(entity.sitelinks)
+# entity = client.get('Q2006222',load=True)
+# print(entity.data['sitelinks']['enwiki']['url'])
+# pprint.pprint(entity.data)
 
 
-# consumer_key = os.getenv("CONSUMER_KEY")
-# consumer_secret = os.getenv("CONSUMER_SECRET")
-# access_token = os.getenv("ACCESS_TOKEN")
-# access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
+consumer_key = os.getenv("CONSUMER_KEY")
+consumer_secret = os.getenv("CONSUMER_SECRET")
+access_token = os.getenv("ACCESS_TOKEN")
+access_token_secret = os.getenv("ACCESS_TOKEN_SECRET")
 
-# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-# auth.set_access_token(access_token, access_token_secret)
-# api = tweepy.API(auth)
-# name = 'name_this_place'
-# for tweet in tweepy.Cursor(api.search,q='to:'+name, result_type='recent', timeout=99999).items(1000):
-#     print(tweet.text)
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
+name = 'name_this_place'
+for tweet in tweepy.Cursor(api.search,q='to:'+name, result_type='recent', timeout=99999).items(1000):
+    print(tweet.text)
 
 # timeline = api.user_timeline(count=30, screen_name='name_this_place')
 
 # with open('src/tweets.json') as file:
     # history = [json.loads(line) for line in file]
 
-# new = []
+# new = [] 
 
 # for entry in history:
 #     for tweet in timeline:

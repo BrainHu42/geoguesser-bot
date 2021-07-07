@@ -23,6 +23,7 @@ def get_data(ID, tweet):
     image_prop = client.get('P18')
     image = entity[image_prop]
     response = requests.get(image.image_url, stream=True)
+    print(response.headers, response.status_code)
     if response.status_code == 200:
         tweet['image_url'] = image.image_url
         tweet['description'] = description

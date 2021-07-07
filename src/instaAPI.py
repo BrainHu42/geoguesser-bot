@@ -17,7 +17,7 @@ def get_access_token():
         try:
             response = requests.get('https://graph.instagram.com/refresh_access_token',params=parameters)
         except:
-            pass
+            return access_token
         new_token = response.json()['access_token']
         os.environ['INSTAGRAM_TOKEN'] = new_token
         return new_token
@@ -28,6 +28,10 @@ def get_access_token():
 def cross_post(tweet):
     ig_user_id = os.getenv('INSTAGRAM_ID')
     access_token = get_access_token()
+
+    # Reply to Comments
+    
+
 
     ig_create_url = 'https://graph.facebook.com/v10.0/{}/media'.format(ig_user_id)
     create_payload = {
@@ -46,5 +50,7 @@ def cross_post(tweet):
             "creation_id": creation_id,
             "access_token": access_token,
         }
-        response = requests.post(ig_post_url, data=post_payload)
+        response = requests.post(ig_post_url, data=post_payload).json()
         print('--------Posted to Instagram--------')
+        if 'id' in response:
+            tweet['post_id'] = response['id']
