@@ -19,8 +19,8 @@ def get_place(history):
         response = requests.get('https://api.opentripmap.com/0.1/en/places/xid/'+xid+'?apikey='+API_KEY)
         place = response.json()
         # Popular and Interesting Locations from wikidata that we haven't already posted
-        if ('rate' in place and '3' in place['rate']) and 'wikidata' in place and 'interesting_places' in place['kinds']:
-            print(place)
+        if 'rate' in place and ('3' in place['rate'] or '2' in place['rate']) and 'wikidata' in place and 'interesting_places' in place['kinds']:
+            # print(place)
             tweet = {}
             if 'point' in place:
                 tweet['coordinates'] = [place['point']['lon'], place['point']['lat']]
@@ -30,7 +30,6 @@ def get_place(history):
             
             wiki = place['wikidata']
             status = get_data(wiki,tweet)
-            print(status)
             if status == 200:
                 tweet['name'] = place['name']
                 tweet['types'] = place['kinds']
@@ -38,4 +37,5 @@ def get_place(history):
                     tweet['address'] = place['address']
                 return tweet 
 
-    return get_place(history)
+    print("Failed to get place. Ration limit exceeded.")
+    return "abort"

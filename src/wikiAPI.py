@@ -1,5 +1,6 @@
 import os
-import requests
+import wget
+from urllib.error import HTTPError
 
 from PIL import Image
 from wikidata.client import Client
@@ -22,22 +23,20 @@ def get_data(ID, tweet):
 
     image_prop = client.get('P18')
     image = entity[image_prop]
-    response = requests.get(image.image_url, stream=True)
-    print(response.headers, response.status_code)
-    if response.status_code == 200:
-        tweet['image_url'] = image.image_url
-        tweet['description'] = description
-        if 'sitelinks' in entity.data and 'enwiki' in entity.data['sitelinks']:
-            tweet['wikipedia'] = entity.data['sitelinks']['enwiki']['url']
-            print(entity.data['sitelinks'])
-            
-        with open('temp.jpg', 'wb') as f:
-            for chunk in response:
-                f.write(chunk)
+    try:
+        filename = wget.download(image.image_url, out="/tmp/temp.jpg")
+    except HTTPError as err:
+        return err
 
-        if image.image_size > 4500000:
-            img = Image.open('temp.jpg')
-            scale_factor = 3600000.0 / image.image_size
-            img.save('temp.jpg',optimize=True,quality=int(100*scale_factor)) 
+    tweet['image_url'] = image.image_url
+    tweet['description'] = description
+    if 'sitelinks' in entity.data and 'enwiki' in entity.data['sitelinks']:
+        tweet['wikipedia'] = entity.data['sitelinks']['enwiki']['url']
+        # print(entity.data['sitelinks'])
 
-    return response.status_code
+    if image.image_size > 4500000:
+        img = Image.open('/tmp/temp.jpg')
+        scale_factor = 3600000.0 / image.image_size
+        img.save('/tmp/temp.jpg',optimize=True,quality=int(100*scale_factor)) 
+
+    return 200

@@ -42,7 +42,7 @@ def cross_post(tweet):
     response = requests.post(ig_create_url, data=create_payload)
 
     result = json.loads(response.text)
-    print(result)
+    # print(result)
     if 'id' in result:
         creation_id = result['id']
         ig_post_url = 'https://graph.facebook.com/v10.0/{}/media_publish'.format(ig_user_id)

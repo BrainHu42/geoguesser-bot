@@ -17,6 +17,8 @@ def lambda_handler(event, context):
     with open(ROOT / 'tweets.json') as file:
         history = [json.loads(line) for line in itertools.islice(reversed(file.readlines()),0,200)]
         tweet = get_place(history)
+        if tweet == "abort":
+            return {"statusCode": 404, "tweet": "Aborted"}
 
     # Constructing Caption
     synonym1 = random.choice(['location', 'place'])
@@ -59,7 +61,7 @@ def lambda_handler(event, context):
     post_tweet(tweet,history)
     
     # Clean Up
-    os.remove('temp.jpg')
+    os.remove('/tmp/temp.jpg')
     del tweet['types']
     with open(ROOT / 'tweets.json', 'a') as file:
         json.dump(tweet, file)

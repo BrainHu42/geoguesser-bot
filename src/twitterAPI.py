@@ -54,7 +54,7 @@ def post_tweet(tweet, history):
         api.update_status(text, in_reply_to_status_id=tweet_id)
 
     # Post new tweet
-    media = api.media_upload(filename="temp.jpg")
+    media = api.media_upload(filename="/tmp/temp.jpg")
     post_result = api.update_status(status=tweet['text'], media_ids=[media.media_id], long=tweet['coordinates'][0], lat=tweet['coordinates'][1], display_coordinates=True)
     tweet['tweet_id'] = post_result.id_str
     print('--------Posted to Twitter--------')
