@@ -1,2 +1,3 @@
 # GeoGuesser Bot
-This bot periodically tweets out 3-5 random images of famous locations throughout the day and replies to people that guess their locations correctly.
+This bot periodically post images of notable locations on instagram and twitter throughout the day and replies to people that guess the name/address correctly.
+Follow @name_this_place (twitter) and @guess_this_place (instagram)
